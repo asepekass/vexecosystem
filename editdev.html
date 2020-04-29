@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   
@@ -911,14 +910,14 @@ window.ScatterJS.plugins( new window.ScatterEOS());
 		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
 if (!account) return;
 		account = account.name;
-
+sign = `${account.name}@${account.authority}`
 var contract_reg = "vexcore";
 var vexnet = VexNet(network);
   vexnet.contract(contract_reg).then(contract =>
    contract.claimrewards({
 owner: account,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Your reward BP claimed");
 }).catch(function(exception) {
