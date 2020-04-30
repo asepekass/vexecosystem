@@ -888,6 +888,16 @@ alert(exception);
 });
 
 $("#claim").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_reg = "vexcore";
 var vexnet = VexNet(network);
   vexnet.contract(contract_reg).then(contract =>
