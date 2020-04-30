@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   
@@ -716,10 +717,10 @@ var network = {
 	chainId: 'f9f432b1851b5c179d2091a96f593aaed50ec7466b74f89301f957a83e56ce1f'
 };
 
-let account = '';
-let balance = '';
-let net = '';
-let cpu = '';
+var account;
+var balance = '';
+var net = '';
+var cpu = '';
 let dots = 0;
 $('.eye').text('|');
 setTimeout(function(){	
@@ -792,12 +793,17 @@ function onConnected(){
 	$('.tog').addClass('d-none');
 	$('#gotin,#logout').removeClass('d-none');
 	$('#yourBp').text(account);
- $('#mybalance').text(balance);
- $('#balance').text(balance);
+ $('#user').text(account);
+$('#bidder').text(account);
+				$('#mybalance').text(balance);
+$('#balance').text(balance);
+$('#stakebalance').text(balance);
+$('#netstake').text(net);
+$('#cpustake').text(cpu);
 	$('#logout').on('click touch', function(){
 		logout();
 	});
-	getinfo(account);
+	getinfo();
 }
 function login() {
 
@@ -864,6 +870,16 @@ $('#bidder').text("please login again");
 }
 
 $("#claimButton").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_claim = "vexcore";
 var vexnet = VexNet(network);
 var url = $("#produrl").val();
@@ -871,31 +887,45 @@ var prodpubkey = $("#prodpubkey").val();
 var indonesia = 0;
   vexnet.contract(contract_claim).then(contract =>
    contract.regproducer({
-producer: account,
+producer: akun,
 producer_key: prodpubkey,
 url: url,
 location: indonesia,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Your BP registered");
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#unreg").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_unreg = "vexcore";
 var vexnet = VexNet(network);
   vexnet.contract(contract_unreg).then(contract =>
    contract.unregprod({
-producer: account,
+producer: akun,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Your BP unregistered");
 }).catch(function(exception) {
 alert(exception);
+})
+})
 })
 });
 
@@ -909,13 +939,13 @@ window.ScatterJS.plugins( new window.ScatterEOS());
 	scatter.getIdentity(requiredFields).then(() => {
 		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
 if (!account) return;
-		account = account.name;
-sign = `${account.name}@${account.authority}`
+		var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_reg = "vexcore";
 var vexnet = VexNet(network);
   vexnet.contract(contract_reg).then(contract =>
    contract.claimrewards({
-owner: account,
+owner: akun,
 }, {
 authorization: sign
 })).then(function() {
@@ -923,9 +953,22 @@ alert("Your reward BP claimed");
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#bid").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+		var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_bid = "vexcore";
 var newname = $("#newname").val();
 var bid = $("#bidprice").val();
@@ -933,19 +976,32 @@ var vex = ' VEX';
 var vexnet = VexNet(network);
 vexnet.contract(contract_bid).then(contract =>
   contract.bidname({
-bidder: account,
+bidder: akun,
 newname: newname,
 bid: bid + vex,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Bidname Success");
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#transferButton").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+		var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_transfer = "vex.token";
 const to = $("#transTo").val();
 const quantity = $("#transAmount").val();
@@ -954,26 +1010,39 @@ const memo = $("#transMemo").val();
 var vexnet = VexNet(network);
 vexnet.contract(contract_transfer).then(contract =>
   contract.transfer({
-from: account,
+from: akun,
 to: to,
 quantity: quantity + vex,
 memo: memo,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Transfer Success");
 getinfo(account);
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#vexplorer").click(function() {
-	var acc = account;
+	var acc = account.name;
 	openLink("https://explorer.vexanium.com/account/" + acc, "_blank");
     });
 
 $("#stakeButton").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_stake = "vexcore";
 const stakecpu = $("#stakecpu").val();
 const stakenet = $("#stakenet").val();
@@ -982,22 +1051,35 @@ var trans = 0;
 var vexnet = VexNet(network);
 vexnet.contract(contract_stake).then(contract =>
   contract.delegatebw({
-from: account,
-receiver: account,
+from: akun,
+receiver: akun,
 stake_net_quantity: stakenet + vex,
 stake_cpu_quantity: stakecpu + vex,
 transfer: trans,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Stake VEX Success");
 getinfo(account);
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#unstakeButton").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_unstake = "vexcore";
 const stakecpu = $("#unstakecpu").val();
 const stakenet = $("#unstakenet").val();
@@ -1005,84 +1087,120 @@ var vex = ' VEX';
 var vexnet = VexNet(network);
 vexnet.contract(contract_unstake).then(contract =>
   contract.undelegatebw({
-from: account,
-receiver: account,
+from: akun,
+receiver: akun,
 unstake_net_quantity: stakenet + vex,
 unstake_cpu_quantity: stakecpu + vex,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Unstake VEX Success");
 getinfo(account);
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 
 $("#voteprod").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_vote = "vexcore";
 const prod = $("#producerName").val();
 var vexnet = VexNet(network);
 vexnet.contract(contract_vote).then(contract =>
   contract.voteproducer({
-voter: account,
+voter: akun,
 proxy: "",
 producers: [prod],
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Vote BP " + prod + " Success");
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
 $("#voteprox").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+				if(!connected) return false;
+
+window.ScatterJS.plugins( new window.ScatterEOS());
+	var scatter = window.ScatterJS.scatter;
+	const requiredFields = { accounts:[network] };
+	scatter.getIdentity(requiredFields).then(() => {
+		account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_vote = "vexcore";
 const prox = $("#proxyName").val();
 var vexnet = VexNet(network);
 vexnet.contract(contract_vote).then(contract =>
   contract.voteproducer({
-voter: account,
+voter: akun,
 proxy: prox,
 producers: [],
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Vote BP " + prox + " Success");
 }).catch(function(exception) {
 alert(exception);
 })
+})
+})
 });
 
-function konfirmasiVote(){
-var konfirmasi = confirm ("Are you sure for vote ekasepbanjar ?");
-var vexnet = VexNet(network);
+$("#konfirmasiVote").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_vote = "vexcore";
-if(konfirmasi == true) {
+var vexnet = VexNet(network);
 vexnet.contract(contract_vote).then(contract =>
   contract.voteproducer({
-voter: account,
+voter: akun,
 proxy: "",
 producers: ["ekasepbanjar"],
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Vote BP ekasepbanjar Success");
 }).catch(function(exception) {
 alert(exception);
 })
-}else{
-alert("canceled")
-}
-}
+})
+})
+});
 
-function konfirmasiDonate(){
-var vexnet = VexNet(network);
+
+$("#konfirmasiDonate").click(function() {
 var contract_transfer = "vex.token";
 var donate = $("#donateamount").val();
 var vex = ' VEX';
+var vexnet = VexNet(network);
 vexnet.contract(contract_transfer).then(contract =>
   contract.transfer({
 from: account,
@@ -1096,7 +1214,7 @@ alert("Transfer Success");
 }).catch(function(exception) {
 alert(exception);
 })
-}
+});
 
 </script>
 
@@ -3227,4 +3345,3 @@ reject(Error("Transfer Error"));
   </script>
   
 </html>
-
