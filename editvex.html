@@ -1159,10 +1159,8 @@ if (!account) return;
 var sign = `${account.name}@${account.authority}`;
 var contract_transfer = "vex.token";
 var donate = $("#donateamount").val();
-var konfirmasi = confirm ("Are you sure for " + donate + " VEX to ekasepbanjar ?");
 var vex = ' VEX';
 var vexnet = VexNet(network);
-if(konfirmasi == true) {
 vexnet.contract(contract_transfer).then(contract =>
   contract.transfer({
 from: akun,
