@@ -828,6 +828,16 @@ $('#bidder').text("please login again");
 }
 
 $("#claimButton").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_claim = "vexcore";
 var vexnet = VexNet(network);
 var url = $("#produrl").val();
@@ -835,12 +845,12 @@ var prodpubkey = $("#prodpubkey").val();
 var indonesia = 0;
   vexnet.contract(contract_claim).then(contract =>
    contract.regproducer({
-producer: account,
+producer: akun,
 producer_key: prodpubkey,
 url: url,
 location: indonesia,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Your BP registered");
 }).catch(function(exception) {
@@ -849,13 +859,23 @@ alert(exception);
 });
 
 $("#unreg").click(function() {
+window.ScatterJS.scatter.connect(appname).then(connected => {
+if(!connected) return false;
+window.ScatterJS.plugins( new window.ScatterEOS());
+   var scatter = window.ScatterJS.scatter;
+ const requiredFields = { accounts:[network] };
+   scatter.getIdentity(requiredFields).then(() => {
+ account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+if (!account) return;
+ var akun = account.name;
+var sign = `${account.name}@${account.authority}`;
 var contract_unreg = "vexcore";
 var vexnet = VexNet(network);
   vexnet.contract(contract_unreg).then(contract =>
    contract.unregprod({
-producer: account,
+producer: akun,
 }, {
-authorization: account
+authorization: sign
 })).then(function() {
 alert("Your BP unregistered");
 }).catch(function(exception) {
