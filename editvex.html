@@ -124,7 +124,7 @@ Mohon Aktifkan Javascript!
 <button id="logout" class="btn btn-danger tog" name="action">Logout</button>
 <br>
 <br>
-Welcome <span id="user"></span>
+<h4>Welcome <span id="user"></span></h4>
 </center>
       </div>
 
@@ -781,6 +781,10 @@ function logout() {
 	try {
 		if(!fromDappBrowser) ScatterJS.logout();
 		sleepy();
+$('#user').text("please login again");
+$('#stakebalance').text("please login again");
+$('#cpustake').text("please login again");
+$('#netstake').text("please login again");
 $('#yourBp').text("please login again");
 				$('#mybalance').text("please login again");
 $('#balance').text("please login again");
@@ -902,6 +906,7 @@ bid: bid + vex,
 authorization: sign
 })).then(function() {
 alert("Bidname Success");
+connect();
 }).catch(function(exception) {
 alert(exception);
 })
@@ -936,7 +941,7 @@ memo: memo,
 authorization: sign
 })).then(function() {
 alert("Transfer Success");
-getinfo(account);
+connect();
 }).catch(function(exception) {
 alert(exception);
 })
@@ -977,7 +982,7 @@ transfer: trans,
 authorization: sign
 })).then(function() {
 alert("Stake VEX Success");
-getinfo(account);
+connect();
 }).catch(function(exception) {
 alert(exception);
 })
@@ -1011,7 +1016,7 @@ unstake_cpu_quantity: stakecpu + vex,
 authorization: sign
 })).then(function() {
 alert("Unstake VEX Success");
-getinfo(account);
+connect();
 }).catch(function(exception) {
 alert(exception);
 })
@@ -1134,6 +1139,7 @@ memo: "Donate for support DApp Vex Ecosystem",
 authorization: sign
 })).then(function() {
 alert("Transfer Success");
+connect();
 }).catch(function(exception) {
 alert(exception);
 })
